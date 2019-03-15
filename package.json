@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/ben-ng/binomial-probability#readme",
   "devDependencies": {
-    "tap": "^6.3.2"
+    "tap": "^12.6.0"
   },
   "dependencies": {
     "combinations-js": "^1.1.2"
