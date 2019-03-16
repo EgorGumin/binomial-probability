@@ -1,7 +1,8 @@
-const combinations = require('combinations-js');
+const mathjs = require('mathjs');
+const BigNumber = mathjs.bignumber;
 const assert = require('assert');
 
-function binomialProbability(trials, successes, prob_of_success) {
+function binomialProbability(trials, successes, successProbability) {
     assert.ok(typeof trials === 'number');
     assert.ok(trials >= 0);
 
@@ -10,20 +11,26 @@ function binomialProbability(trials, successes, prob_of_success) {
 
     assert.ok(successes <= trials);
 
-    assert.ok(typeof prob_of_success === 'number');
-    assert.ok(prob_of_success >= 0);
-    assert.ok(prob_of_success <= 1);
+    assert.ok(typeof successProbability === 'number');
+    assert.ok(successProbability >= 0);
+    assert.ok(successProbability <= 1);
 
-    return combinations(trials, successes) *
-        Math.pow(prob_of_success, successes) *
-        Math.pow(1 - prob_of_success, trials - successes)
+    const failures = trials - successes;
+    const failureProbability = 1 - successProbability;
+
+    return mathjs
+        .chain(mathjs.combinations(BigNumber(trials), BigNumber(successes)))
+        .multiply(BigNumber(Math.pow(successProbability, successes)))
+        .multiply(BigNumber(Math.pow(failureProbability, failures)))
+        .number()
+        .done()
 }
 
-function cumulativeBinomialProbability(trials, successes, prob_of_success) {
+function cumulativeBinomialProbability(trials, successes, successProbability) {
     let cumulative = 0;
 
     for (let i = 0; i <= successes; ++i) {
-        cumulative = cumulative + binomialProbability(trials, i, prob_of_success)
+        cumulative = cumulative + binomialProbability(trials, i, successProbability)
     }
 
     return cumulative
